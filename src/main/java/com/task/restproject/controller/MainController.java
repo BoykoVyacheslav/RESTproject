@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.*;
 public class MainController {
 
     @Autowired
-    private DataRepo dataDAO;
+    private DataRepo dao;
     private Gson gson=new Gson();
 
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public void saveData(@RequestBody String reqBody){
-        JsonObject jsonObject=gson.fromJson(reqBody,JsonObject.class);       //creating JSON object from request body
+        JsonObject jsonObject=gson.fromJson(reqBody,JsonObject.class);  //creating JSON object from request body
         JsonArray jsonArray=jsonObject.getAsJsonArray("data"); //extracting an array of internal objects
-        Data[] dataArray=gson.fromJson(jsonArray,Data[].class);                       //parsing JSON array to "Data" array
-        for (Data d:dataArray) {                                                                              //saving each objects from array to database via JpaRepository
-            dataDAO.save(d);
+        Data[] dataArray=gson.fromJson(jsonArray,Data[].class);  //parsing JSON array to "Data" array
+        for (Data d:dataArray) {   //saving each objects from array to database via JpaRepository
+            dao.save(d);
         }
     }
     @RequestMapping(value = "/get/{id}",method = RequestMethod.GET,produces = "application/text")
     public String getData(@PathVariable("id") Integer id){
-        return dataDAO.findDataByIde(id).toString();
+        return dao.findDataByIde(id).toString();
     }
 }
